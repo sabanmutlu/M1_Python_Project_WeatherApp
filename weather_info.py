@@ -9,24 +9,6 @@ class WeatherInfo:
     __country: StringVar()
     __json_var: StringVar()
 
-    def main(self):
-        fenster = tk.Tk()
-        fenster.title('Weather Info')
-        fenster.geometry('800x600+100+100')
-        fenster['padx'] = 5
-
-        self.__city = StringVar()
-        self.__country = StringVar()
-        self.__json_var = StringVar()
-
-        top_frame = self.create_top_frame()
-        top_frame.grid(column=0, row=0, pady=5, sticky='n')
-
-        bottom_frame = self.create_bottom_frame()
-        bottom_frame.grid(column=0, row=1, pady=5, ipadx=5, ipady=5, sticky='s')
-
-        fenster.mainloop()
-
     def create_top_frame(self):
         frame = ttk.Frame()
         frame['padding'] = 5
@@ -64,6 +46,24 @@ class WeatherInfo:
         self.__json_var.set(data)
         coord = data['coord']
         print(f'01 {coord}')
+
+    def main(self):
+        fenster = tk.Tk()
+        fenster.title('Weather Info')
+        fenster.geometry('800x600+100+100')
+        fenster['padx'] = 5
+
+        self.__city = StringVar()
+        self.__country = StringVar()
+        self.__json_var = StringVar()
+
+        top_frame = self.create_top_frame()
+        top_frame.grid(column=0, row=0, pady=5, sticky='n')
+
+        bottom_frame = self.create_bottom_frame()
+        bottom_frame.grid(column=0, row=1, pady=5, ipadx=5, ipady=5, sticky='s')
+
+        fenster.mainloop()
 
     """
     self.__info.set(data['weather'])
