@@ -1,0 +1,10 @@
+{'coord': {'lon': 6.0834, 'lat': 50.7766
+    }, 'weather': [
+        {'id': 801, 'main': 'Clouds', 'description': 'few clouds', 'icon': '02n'
+        }
+    ], 'base': 'stations', 'main': {'temp': 14.95, 'feels_like': 14.93, 'temp_min': 13.86, 'temp_max': 15.52, 'pressure': 1011, 'humidity': 93
+    }, 'visibility': 10000, 'wind': {'speed': 2.94, 'deg': 201, 'gust': 5.52
+    }, 'clouds': {'all': 18
+    }, 'dt': 1654637803, 'sys': {'type': 2, 'id': 2013497, 'country': 'DE', 'sunrise': 1654572259, 'sunset': 1654631097
+    }, 'timezone': 7200, 'id': 3247449, 'name': 'Aachen', 'cod': 200
+}
