@@ -39,12 +39,9 @@ class Wetterinformationen:
         btn_wetter = tk.Button(z_frame, text=' Aktuelle Wetterinformationen ', command=self.__button_info_klick)
         btn_wetter["font"] = bt_font
         btn_wetter.pack(anchor="w", side="left", padx=5, pady=5)
-        btn_stuendlich = tk.Button(z_frame, text=' Stündlich Wetterinformationen ', command=self.__button_info_klick)
-        btn_stuendlich["font"] = bt_font
-        btn_stuendlich.pack(anchor="w", side="left", padx=5, pady=5)
-        btn_taeglich = tk.Button(z_frame, text=' Tägliche Wettervorhersagen ', command=self.__button_info_klick)
-        btn_taeglich["font"] = bt_font
-        btn_taeglich.pack(anchor="w", side="left", padx=5, pady=5)
+        btn_vorhersagen = tk.Button(z_frame, text=' Stündlich Wetterinformationen ', command=self.__button_vorhersagen_klick)
+        btn_vorhersagen["font"] = bt_font
+        btn_vorhersagen.pack(anchor="w", side="left", padx=5, pady=5)
 
         d_frame = ttk.Frame(fenster)
         d_frame.pack()
@@ -70,6 +67,34 @@ class Wetterinformationen:
         if fehlermeldung == '':
             api_key = '1f376d57a9f8db239af30093b382b340'
             url = f'https://api.openweathermap.org/data/2.5/weather?q={stadt},{land}&appid={api_key}&units=metric' \
+                  f'&lang=de'
+            response = requests.get(url)
+            data = json.loads(response.text)
+            if str(response)[1:-1] == 'Response [404]':
+                meldung_mode = 1
+                meldung = f'Keine Antwort auf die gesuchten Wörter.\n ' \
+                          f'Bitte überprüfen Sie die Werte auf Korrektheit, \n' \
+                          'oder es gibt keine solche Stadt in der Datenbank.'
+            else:
+                self.__json_var.set(data)
+                meldung_mode = 2
+        else:
+            meldung_mode = 0
+            meldung = fehlermeldung
+        self.ergebnis_data(meldung_mode, meldung)
+
+    def __button_vorhersagen_klick(self):
+        stadt = self.__stadt.get().strip()
+        land = self.__land.get().strip()
+        fehlermeldung = ''
+        meldung = ''
+        if stadt is None or stadt == '':
+            fehlermeldung = 'Stadt Feld kann nicht leer sein!'
+        elif land is None or land == '':
+            fehlermeldung = f'Land Feld kann nicht leer sein!'
+        if fehlermeldung == '':
+            api_key = '1f376d57a9f8db239af30093b382b340'
+            url = f'https://api.openweathermap.org/data/2.5/forecast?q={stadt},{land}&appid={api_key}&units=metric' \
                   f'&lang=de'
             response = requests.get(url)
             data = json.loads(response.text)
