@@ -14,7 +14,7 @@ class Wetterinformationen:
     def main(self):
         fenster = tk.Tk()
         fenster.title('Wetterinformationen')
-        fenster.geometry('1000x600+100+100')
+        fenster.geometry('1000x400+100+100')
 
         self.__stadt = StringVar()
         self.__land = StringVar()
@@ -34,17 +34,14 @@ class Wetterinformationen:
 
         z_frame = tk.Frame(fenster)
         z_frame.pack()
-        btn_font = font.Font(size=15)
+        bt_font = font.Font(size=12)
 
-        btn_wetter = ttk.Button(z_frame, text=' Aktuelle Wetterinformationen ', command=self.__button_info_klick)
-        btn_wetter['font'] = btn_font
+        btn_wetter = tk.Button(z_frame, text=' Aktuelle Wetterinformationen ', command=self.__button_info_klick)
+        btn_wetter["font"] = bt_font
         btn_wetter.pack(anchor="w", side="left", padx=5, pady=5)
-        btn_stuendlich = ttk.Button(z_frame, text=' Stündlich Wetterinformationen ', command=self.__button_info_klick)
-        btn_stuendlich['font'] = btn_font
-        btn_stuendlich.pack(anchor="w", side="left", padx=5, pady=5)
-        btn_taeglich = ttk.Button(z_frame, text=' Tägliche Wettervorhersagen ', command=self.__button_info_klick)
-        btn_taeglich['font'] = btn_font
-        btn_taeglich.pack(anchor="w", side="left", padx=5, pady=5)
+        btn_vorhersagen = tk.Button(z_frame, text=' Stündlich Wetterinformationen ', command=self.__button_vorhersagen_klick)
+        btn_vorhersagen["font"] = bt_font
+        btn_vorhersagen.pack(anchor="w", side="left", padx=5, pady=5)
 
         d_frame = ttk.Frame(fenster)
         d_frame.pack()
@@ -53,26 +50,8 @@ class Wetterinformationen:
         lbl_erg.pack()
         v_frame = ttk.Frame(fenster)
         v_frame.pack()
-        erg_data = ttk.Label(v_frame, textvariable=self.__erg_data, font=('Arial', 14))
+        erg_data = ttk.Label(v_frame, textvariable=self.__erg_data, font=('Arial', 14), background="white")
         erg_data.pack(anchor="w")
-
-        """
-        lbl1 = ttk.Label(fenster, text='Stadt : ', font=('Arial', 15))
-        lbl1.grid(row=0, column=0, sticky='w', padx=5, pady=5, ipadx=5, ipady=5)
-        ent_stadt = ttk.Entry(fenster, textvariable=self.__stadt, font=('Arial', 12))
-        ent_stadt.grid(row=0, column=1, sticky='w', padx=10, pady=5, ipadx=5, ipady=5)
-        lbl2 = ttk.Label(fenster, text='Land : ', font=('Arial', 15))
-        lbl2.grid(row=0, column=3, sticky='w', padx=5, pady=5, ipadx=5, ipady=5)
-        land = ttk.Entry(fenster, textvariable=self.__land, font=('Arial', 12))
-        land.grid(row=0, column=4, sticky='w', padx=10, pady=5, ipadx=5, ipady=5)
-        btn = ttk.Button(fenster, text=' Aktuelle Wetterinformationen ', command=self.__button_info_klick)
-        btn.grid(row=1, column=0, columnspan=2, padx=5, pady=5, ipadx=5, ipady=5)
-        erg_titel = f'Wetterinformationen:'
-        lbl_erg = ttk.Label(fenster, text=erg_titel, font=('Arial', 15))
-        lbl_erg.grid(row=4, column=0, columnspan=2, sticky='w', padx=5, pady=5, ipadx=5, ipady=5)
-        erg_data = ttk.Label(fenster, textvariable=self.__erg_data, font=('Arial', 14))
-        erg_data.grid(row=5, column=0, columnspan=2, sticky='w', padx=10, pady=5, ipadx=5, ipady=5)
-        """
 
         fenster.mainloop()
 
@@ -88,6 +67,34 @@ class Wetterinformationen:
         if fehlermeldung == '':
             api_key = '1f376d57a9f8db239af30093b382b340'
             url = f'https://api.openweathermap.org/data/2.5/weather?q={stadt},{land}&appid={api_key}&units=metric' \
+                  f'&lang=de'
+            response = requests.get(url)
+            data = json.loads(response.text)
+            if str(response)[1:-1] == 'Response [404]':
+                meldung_mode = 1
+                meldung = f'Keine Antwort auf die gesuchten Wörter.\n ' \
+                          f'Bitte überprüfen Sie die Werte auf Korrektheit, \n' \
+                          'oder es gibt keine solche Stadt in der Datenbank.'
+            else:
+                self.__json_var.set(data)
+                meldung_mode = 2
+        else:
+            meldung_mode = 0
+            meldung = fehlermeldung
+        self.ergebnis_data(meldung_mode, meldung)
+
+    def __button_vorhersagen_klick(self):
+        stadt = self.__stadt.get().strip()
+        land = self.__land.get().strip()
+        fehlermeldung = ''
+        meldung = ''
+        if stadt is None or stadt == '':
+            fehlermeldung = 'Stadt Feld kann nicht leer sein!'
+        elif land is None or land == '':
+            fehlermeldung = f'Land Feld kann nicht leer sein!'
+        if fehlermeldung == '':
+            api_key = '1f376d57a9f8db239af30093b382b340'
+            url = f'https://api.openweathermap.org/data/2.5/forecast?q={stadt},{land}&appid={api_key}&units=metric' \
                   f'&lang=de'
             response = requests.get(url)
             data = json.loads(response.text)
