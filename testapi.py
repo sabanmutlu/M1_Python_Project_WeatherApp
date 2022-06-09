@@ -13,4 +13,4 @@ url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name},{country_c
 response = requests.get(url)
 """
 data = json.loads(response.text)
-print(data)
+
