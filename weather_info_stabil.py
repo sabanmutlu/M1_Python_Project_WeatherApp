@@ -12,6 +12,7 @@ class Wetterinformationen:
     __erg_data: StringVar
 
     def main(self):
+        # Create main fenster
         fenster = tk.Tk()
         fenster.title('Wetterinformationen')
         fenster.geometry('1000x400+100+100')
@@ -21,6 +22,7 @@ class Wetterinformationen:
         self.__json_var = StringVar()
         self.__erg_data = StringVar()
 
+        # Create labels, input boxes and result area
         e_frame = tk.Frame(fenster)
         e_frame.pack()
         lbl1 = tk.Label(e_frame, text='Stadt : ', font=('Arial', 15))
@@ -53,8 +55,11 @@ class Wetterinformationen:
         fenster.mainloop()
 
     def __button_info_klick(self):
+        # When latest weather information button pushed
         stadt = self.__stadt.get().strip()
         land = self.__land.get().strip()
+
+        # Validate the inputs
         fehlermeldung = ''
         meldung = ''
         if stadt is None or stadt == '':
@@ -62,11 +67,16 @@ class Wetterinformationen:
         elif land is None or land == '':
             fehlermeldung = f'Land Feld kann nicht leer sein!'
         if fehlermeldung == '':
+            # Connect to API and get the data as JSON
             api_key = '1f376d57a9f8db239af30093b382b340'
             url = f'https://api.openweathermap.org/data/2.5/weather?q={stadt},{land}&appid={api_key}&units=metric' \
                   f'&lang=de'
             response = requests.get(url)
+
+            # Convert the result to dictionary
             data = json.loads(response.text)
+
+            # When there is no response, warn the user for possible syntax or no data
             if str(response)[1:-1] == 'Response [404]':
                 meldung_mode = 1
                 meldung = f'Keine Antwort auf die gesuchten Wörter.\n ' \
@@ -81,12 +91,14 @@ class Wetterinformationen:
         self.ergebnis_data(meldung_mode, meldung)
 
     def ergebnis_data(self, meldung_mode, meldung):
+        # Prepare the result data (Can be also error message)
         ergebnis_data_built = ''
         if meldung_mode == 0:
             ergebnis_data_built = meldung
         elif meldung_mode == 1:
             ergebnis_data_built = meldung
         elif meldung_mode == 2:
+            # Make titles and data for result area
             locale.setlocale(locale.LC_ALL, 'de_DE')
             b_datum = datetime.now().strftime('%A, %B %d %H:%M')
             json_var = self.__json_var.get()
