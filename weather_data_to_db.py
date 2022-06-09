@@ -2,7 +2,6 @@
 # import json
 import sqlite3
 from sqlite3 import Error
-
 import pandas as pd
 import datetime
 
@@ -63,6 +62,8 @@ def wf_to_sqlite():
         # Create table weather_request
         create_tables(conn)
         df_wr.to_sql("weather_request", conn, if_exists='append', index=False)
+
+        # See table
         see_table = pd.read_sql('select * from weather_request', conn)
         print(see_table)
 
