@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import StringVar, ttk
-import requests, json, locale
+import requests
+import json
+import locale
 from datetime import datetime
 import tkinter.font as font
 
@@ -110,7 +112,8 @@ class Wetterinformationen:
                           f'Temperatur: {jvl["main"]["temp"]}°C, Gefühlte Temperatur: {jvl["main"]["feels_like"]}°C,' 
                           f' {jvl["weather"][0]["description"]}',
                           f'Windgeschwindigkeit: {jvl["wind"]["speed"]} m/s, Windrichtung: {jvl["wind"]["deg"]} Grad, '
-                          f'Regen: {"Kein info" if "rain" not in jvl else str(jvl["rain"]["1h"]) + " mm letzte Stunde"}',
+                          f'Regen: '
+                          f'{"Kein info" if "rain" not in jvl else str(jvl["rain"]["1h"]) + " mm letzte Stunde"}',
                           f'Druck: {jvl["main"]["pressure"]} hPA, Feuchtigkeit: {jvl["main"]["humidity"]}']
             edb = ''
             for il in range(len(info_labels)):
@@ -122,4 +125,3 @@ class Wetterinformationen:
 if __name__ == '__main__':
     r = Wetterinformationen()
     r.main()
-
